@@ -45,7 +45,9 @@ public class BuscadorService {
                 if (autorEncontrado.isPresent()) {
                     livro.getAutores().add(autorEncontrado.get());
                 } else {
-                    livro.getAutores().add(new Pessoa(autorDto.name(), autorDto.birthYear(), autorDto.deathYear()));
+                    Pessoa autorNovo = new Pessoa(autorDto.name(), autorDto.birthYear(), autorDto.deathYear());
+                    pessoaRepository.save(autorNovo);
+                    livro.getAutores().add(autorNovo);
                 }
             }
             repository.save(livro);
