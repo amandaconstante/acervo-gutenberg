@@ -22,7 +22,7 @@ public class BuscadorView {
     public void startApp() {
         String menu = """
                 
-                **********************ACERVO GUTENDEX**********************
+                **********************ACERVO GUTENBERG**********************
                 >>>> Escolha uma opção:
                 
                 1 - Buscar livro por nome
@@ -36,10 +36,12 @@ public class BuscadorView {
         int option = -1;
         while (option != 0) {
             System.out.println(menu);
+            System.out.print(">>>  ");
             try {
                 option = scanner.nextInt();
             } catch (InputMismatchException e ){
                 System.out.println("Entrada inválida! A opção deve ser numérica.");
+                option = -1;
             }
             scanner.nextLine();
              switch (option) {
@@ -72,7 +74,7 @@ public class BuscadorView {
         System.out.println("-".repeat(30));
         System.out.println("Todos os autores: \n");
         autores.forEach(a -> System.out.println(a.name()
-                + "\nNasc.: " + a.birthYear()
+                + "\nNasc.: " + (a.birthYear() != null ? a.birthYear() : "desconhecido.")
                 + "\nMorte: "
                 + (a.deathYear() != null ? + a.deathYear() : "Não registrado.")
                 + "\n***"
@@ -81,18 +83,17 @@ public class BuscadorView {
 
     private void listarLivros() {
         List<LivroDtoResponse> livros = service.buscarLivros();
-
         System.out.println("-".repeat(30));
         System.out.println("Todos os livros baixados: \n");
         livros.forEach(l -> System.out.println(l.title() + "\nAutor: " +
-                        l.authors().getFirst().name() + "\nTotal downloads: " + l.downloadCount() + "\n***")
+                (l.authors().isEmpty() ? "desconhecido" : l.authors().getFirst().name()) + "\nTotal downloads: "
+                + l.downloadCount() + "\n***")
         );
     }
 
     private void buscarLivroPorNome() {
         System.out.println("Informe o nome da obra: ");
         String nomeLivro = scanner.nextLine();
-
         service.buscarLivroPorNome(nomeLivro);
     }
 }
