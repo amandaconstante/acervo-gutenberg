@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,5 +52,26 @@ public class BuscadorService {
         } else {
             System.out.println("Obra não está disponível no acervo do Gutendex.");
         }
+    }
+
+    public List<LivroDtoResponse> buscarLivros() {
+        List<Livro> livros = repository.findAll();
+        return converteLivros(livros);
+    }
+
+    private List<LivroDtoResponse> converteLivros(List<Livro> livros) {
+        return livros.stream()
+                .map(l -> new LivroDtoResponse(
+                        l.getTitulo(),
+                        converteAutores(l.getAutores()),
+                        l.getIdiomas(),
+                        l.getTotalDownload()))
+                .toList();
+    }
+
+    private List<PessoaDto> converteAutores(List<Pessoa> autores) {
+        return autores.stream()
+                .map(a -> new PessoaDto(a.getAnoNascimento(), a.getAnoMorte(), a.getNome()))
+                .toList();
     }
 }

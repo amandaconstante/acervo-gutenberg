@@ -1,9 +1,11 @@
 package com.challenge.buscador.literario.view;
 
+import com.challenge.buscador.literario.dto.LivroDtoResponse;
 import com.challenge.buscador.literario.service.BuscadorService;
 import org.springframework.stereotype.Component;
 
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 @Component
@@ -43,9 +45,9 @@ public class BuscadorView {
                  case 1:
                      buscarLivroPorNome();
                      break;
-//                 case 2:
-//                     listarLivros();
-//                     break;
+                 case 2:
+                     listarLivros();
+                     break;
 //                 case 3:
 //                     listarAutores();
 //                     break;
@@ -62,6 +64,17 @@ public class BuscadorView {
                      System.out.println("Digite uma das opções da lista ");
              }
         }
+    }
+
+    private void listarLivros() {
+        List<LivroDtoResponse> livros = service.buscarLivros();
+
+        System.out.println("-".repeat(30));
+        System.out.println("Todos os livros baixados: \n");
+        livros.forEach(l -> System.out.println(l.title() + "\nAutor: " +
+                        l.authors().getFirst().name() + "\nTotal downloads: " + l.downloadCount() + "\n***")
+        );
+//        System.out.println("-".repeat(30));
     }
 
     private void buscarLivroPorNome() {

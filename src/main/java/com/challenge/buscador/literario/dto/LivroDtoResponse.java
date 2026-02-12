@@ -9,7 +9,7 @@ import java.util.List;
 public record LivroDtoResponse(String title,
                                List<PessoaDto> authors,
                                List<String> languages,
-                               @JsonAlias(value = "download_count") Long downloadCount,
-                               @JsonAlias(value = "subjects") List<String> genero,
-                               @JsonAlias(value = "summaries") List<String> resumo
+                               @JsonAlias(value = "download_count") Long downloadCount
+//                               @JsonAlias(value = "subjects") List<String> genero,
+//                               @JsonAlias(value = "summaries") List<String> resumo
 ) { }
