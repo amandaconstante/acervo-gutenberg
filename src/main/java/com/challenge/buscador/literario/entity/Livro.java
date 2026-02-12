@@ -25,15 +25,11 @@ public class Livro {
 
     public Livro() {}
 
-    public Livro(String titulo, List<PessoaDto> autores, List<String> idiomas, Long totalDownload) {
+    public Livro(String titulo, List<String> idiomas, Long totalDownload) {
         this.titulo = titulo;
         this.idiomas = idiomas;
         this.totalDownload = totalDownload;
         this.autores = new ArrayList<>();
-
-        autores.forEach(dto ->
-                this.autores.add(new Pessoa(dto.name(), dto.birthYear(), dto.deathYear()))
-        );
     }
 
     public Long getId() {
