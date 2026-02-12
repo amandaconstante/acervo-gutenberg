@@ -1,4 +1,4 @@
-package com.challenge.buscador_literario;
+package com.challenge.buscador.literario;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
