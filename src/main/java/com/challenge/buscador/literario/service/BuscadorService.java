@@ -74,4 +74,8 @@ public class BuscadorService {
                 .map(a -> new PessoaDto(a.getAnoNascimento(), a.getAnoMorte(), a.getNome()))
                 .toList();
     }
+
+    public List<PessoaDto> buscarAutores() {
+        return converteAutores(pessoaRepository.findAll());
+    }
 }

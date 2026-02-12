@@ -1,6 +1,7 @@
 package com.challenge.buscador.literario.view;
 
 import com.challenge.buscador.literario.dto.LivroDtoResponse;
+import com.challenge.buscador.literario.dto.PessoaDto;
 import com.challenge.buscador.literario.service.BuscadorService;
 import org.springframework.stereotype.Component;
 
@@ -20,9 +21,9 @@ public class BuscadorView {
 
     public void startApp() {
         String menu = """
-                ***********************************************************
+                
                 **********************ACERVO GUTENDEX**********************
-                *** Escolha uma opção:
+                >>>> Escolha uma opção:
                 
                 1 - Buscar livro por nome
                 2 - Listar livros registrados
@@ -48,9 +49,9 @@ public class BuscadorView {
                  case 2:
                      listarLivros();
                      break;
-//                 case 3:
-//                     listarAutores();
-//                     break;
+                 case 3:
+                     listarAutores();
+                     break;
 //                 case 4:
 //                     listarAutoresVivos();
 //                     break;
@@ -66,6 +67,18 @@ public class BuscadorView {
         }
     }
 
+    private void listarAutores() {
+        List<PessoaDto> autores = service.buscarAutores();
+        System.out.println("-".repeat(30));
+        System.out.println("Todos os autores: \n");
+        autores.forEach(a -> System.out.println(a.name()
+                + "\nNasc.: " + a.birthYear()
+                + "\nMorte: "
+                + (a.deathYear() != null ? + a.deathYear() : "Não registrado.")
+                + "\n***"
+        ));
+    }
+
     private void listarLivros() {
         List<LivroDtoResponse> livros = service.buscarLivros();
 
@@ -74,7 +87,6 @@ public class BuscadorView {
         livros.forEach(l -> System.out.println(l.title() + "\nAutor: " +
                         l.authors().getFirst().name() + "\nTotal downloads: " + l.downloadCount() + "\n***")
         );
-//        System.out.println("-".repeat(30));
     }
 
     private void buscarLivroPorNome() {
