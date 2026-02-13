@@ -1,6 +1,5 @@
 package com.challenge.buscador.literario.entity;
 
-import com.challenge.buscador.literario.dto.PessoaDto;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -20,6 +19,9 @@ public class Livro {
             inverseJoinColumns = @JoinColumn(name = "pessoa_id")
     )
     private List<Pessoa> autores;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "livro_idiomas", joinColumns = @JoinColumn(name = "livro_id"))
+    @Column(name = "idioma")
     private List<String> idiomas;
     private Long totalDownload;
 
