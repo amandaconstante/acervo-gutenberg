@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface LivroRepository extends JpaRepository<Livro, Long> {
     List<Livro> findByIdiomas(String idioma);
+
+    boolean existsByTituloIgnoreCase(String title);
 }

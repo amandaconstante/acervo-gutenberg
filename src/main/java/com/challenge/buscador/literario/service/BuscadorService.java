@@ -8,6 +8,7 @@ import com.challenge.buscador.literario.entity.Pessoa;
 import com.challenge.buscador.literario.repository.LivroRepository;
 import com.challenge.buscador.literario.repository.PessoaRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -28,6 +29,7 @@ public class BuscadorService {
         this.pessoaRepository = pessoaRepository;
     }
 
+    @Transactional
     public void buscarLivroPorNome(String nomeLivro) {
         var nomeCodificado = URLEncoder.encode(nomeLivro, StandardCharsets.UTF_8);
         var address = "https://gutendex.com/books/?search=" + nomeCodificado;
@@ -36,20 +38,25 @@ public class BuscadorService {
         List<LivroDtoResponse> livros = converteDados.obterDados(response, ResponseDto.class).results();
         if (!livros.isEmpty()) {
             LivroDtoResponse livroEncontrado = livros.getFirst();
-            Livro livro = new Livro(livroEncontrado.title(), livroEncontrado.languages(), livroEncontrado.downloadCount());
-            System.out.println("quantos autores = " + livroEncontrado.authors().size());
+            boolean isCadastrado = repository.existsByTituloIgnoreCase(livroEncontrado.title());
+            if (!isCadastrado) {
+                Livro livro = new Livro(livroEncontrado.title(), livroEncontrado.languages(), livroEncontrado.downloadCount());
+                System.out.println("quantos autores = " + livroEncontrado.authors().size());
 
-            for (PessoaDto autorDto : livroEncontrado.authors()) {
-                Optional<Pessoa> autorEncontrado = pessoaRepository.findByNomeIgnoreCase(autorDto.name());
-                if (autorEncontrado.isPresent()) {
-                    livro.getAutores().add(autorEncontrado.get());
-                } else {
-                    Pessoa autorNovo = new Pessoa(autorDto.name(), autorDto.birthYear(), autorDto.deathYear());
-                    pessoaRepository.save(autorNovo);
-                    livro.getAutores().add(autorNovo);
+                for (PessoaDto autorDto : livroEncontrado.authors()) {
+                    Optional<Pessoa> autorEncontrado = pessoaRepository.findByNomeIgnoreCase(autorDto.name());
+                    if (autorEncontrado.isPresent()) {
+                        livro.getAutores().add(autorEncontrado.get());
+                    } else {
+                        Pessoa autorNovo = new Pessoa(autorDto.name(), autorDto.birthYear(), autorDto.deathYear());
+                        pessoaRepository.save(autorNovo);
+                        livro.getAutores().add(autorNovo);
+                    }
                 }
+                repository.save(livro);
+            } else {
+                System.out.println("Obra já existe no seu acervo.");
             }
-            repository.save(livro);
         } else {
             System.out.println("Obra não está disponível no acervo do Gutendex.");
         }
