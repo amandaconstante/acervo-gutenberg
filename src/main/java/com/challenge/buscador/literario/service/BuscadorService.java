@@ -80,4 +80,8 @@ public class BuscadorService {
     public List<PessoaDto> buscarAutores() {
         return converteAutores(pessoaRepository.findAll());
     }
+
+    public List<PessoaDto> buscarAutoresVivos(long ano) {
+        return converteAutores(pessoaRepository.buscarAutoresVivosNoAnoDe(ano));
+    }
 }

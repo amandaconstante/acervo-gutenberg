@@ -54,9 +54,9 @@ public class BuscadorView {
                  case 3:
                      listarAutores();
                      break;
-//                 case 4:
-//                     listarAutoresVivos();
-//                     break;
+                 case 4:
+                     listarAutoresVivos();
+                     break;
 //                 case 5:
 //                     listarLivrosPorIdioma();
 //                     break;
@@ -67,6 +67,23 @@ public class BuscadorView {
                      System.out.println("Digite uma das opções da lista ");
              }
         }
+    }
+
+    private void listarAutoresVivos() {
+        System.out.println("Digite o ano: ");
+        System.out.print(">> ");
+        var ano = scanner.nextLong();
+        scanner.nextLine();
+
+        List<PessoaDto> autoresVivos = service.buscarAutoresVivos(ano);
+        System.out.println("------------- Autores vivos em: " + ano + " -------------");
+        autoresVivos.forEach(a -> System.out.println(a.name()
+                + "\nNasc.: " + (a.birthYear() != null ? a.birthYear() : "desconhecido.")
+                + "\nMorte: "
+                + (a.deathYear() != null ? + a.deathYear() : "Não registrado.")
+                + "\n***")
+        );
+
     }
 
     private void listarAutores() {
