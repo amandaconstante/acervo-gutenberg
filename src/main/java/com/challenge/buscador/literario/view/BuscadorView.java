@@ -29,7 +29,7 @@ public class BuscadorView {
                 2 - Listar livros registrados
                 3 - Listar autores registrados
                 4 - Listar autores vivos em determinado ano
-                5 - Listar livros por idioma
+                5 - Listar livros em um determinado idioma
                 
                 0 - Sair
                 """;
@@ -57,9 +57,9 @@ public class BuscadorView {
                  case 4:
                      listarAutoresVivos();
                      break;
-//                 case 5:
-//                     listarLivrosPorIdioma();
-//                     break;
+                 case 5:
+                     listarLivrosPorIdioma();
+                     break;
                  case 0:
                      System.out.println("Saindo...");
                      break;
@@ -69,13 +69,35 @@ public class BuscadorView {
         }
     }
 
+    private void listarLivrosPorIdioma() {
+        String msg = """
+                Escolha o idioma para realizar a busca:
+                
+                pt - português
+                es - espanhol
+                fr - francês
+                en - inglês
+                
+                """;
+        System.out.println(msg);
+        System.out.print(">> ");
+        String opcaoIdioma = scanner.nextLine();
+        List<LivroDtoResponse> livrosPorIdioma = service.buscarLivrosPorIdioma(opcaoIdioma);
+        System.out.println("----------- Livros com idioma: " + opcaoIdioma + " -----------\n");
+        livrosPorIdioma.forEach(l -> System.out.println(l.title() + "\nAutor: "
+                + (l.authors().isEmpty() ? "desconhecido" : l.authors().getFirst().name())
+                + "\nTotal downloads: " + l.downloadCount()
+                + "\n***")
+        );
+    }
+
     private void listarAutoresVivos() {
         System.out.println("Digite o ano: ");
         System.out.print(">> ");
         var ano = scanner.nextLong();
         scanner.nextLine();
-
         List<PessoaDto> autoresVivos = service.buscarAutoresVivos(ano);
+
         System.out.println("------------- Autores vivos em: " + ano + " -------------");
         autoresVivos.forEach(a -> System.out.println(a.name()
                 + "\nNasc.: " + (a.birthYear() != null ? a.birthYear() : "desconhecido.")
@@ -83,7 +105,6 @@ public class BuscadorView {
                 + (a.deathYear() != null ? + a.deathYear() : "Não registrado.")
                 + "\n***")
         );
-
     }
 
     private void listarAutores() {
@@ -102,9 +123,11 @@ public class BuscadorView {
         List<LivroDtoResponse> livros = service.buscarLivros();
         System.out.println("-".repeat(30));
         System.out.println("Todos os livros baixados: \n");
-        livros.forEach(l -> System.out.println(l.title() + "\nAutor: " +
-                (l.authors().isEmpty() ? "desconhecido" : l.authors().getFirst().name()) + "\nTotal downloads: "
-                + l.downloadCount() + "\n***")
+        livros.forEach(l -> System.out.println(l.title() + "\nAutor: "
+                + (l.authors().isEmpty() ? "desconhecido" : l.authors().getFirst().name())
+                + "\nIdioma: " + l.languages().toString()
+                + "\nTotal downloads: " + l.downloadCount()
+                + "\n***")
         );
     }
 

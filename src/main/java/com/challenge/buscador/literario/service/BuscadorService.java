@@ -34,7 +34,6 @@ public class BuscadorService {
         var response = consumoApi.getResponse(address);
         System.out.println(response);
         List<LivroDtoResponse> livros = converteDados.obterDados(response, ResponseDto.class).results();
-
         if (!livros.isEmpty()) {
             LivroDtoResponse livroEncontrado = livros.getFirst();
             Livro livro = new Livro(livroEncontrado.title(), livroEncontrado.languages(), livroEncontrado.downloadCount());
@@ -83,5 +82,9 @@ public class BuscadorService {
 
     public List<PessoaDto> buscarAutoresVivos(long ano) {
         return converteAutores(pessoaRepository.buscarAutoresVivosNoAnoDe(ano));
+    }
+
+    public List<LivroDtoResponse> buscarLivrosPorIdioma(String idioma) {
+        return converteLivros(repository.findByIdiomas(idioma.toLowerCase()));
     }
 }
